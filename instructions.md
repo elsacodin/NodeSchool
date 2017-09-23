@@ -1,5 +1,5 @@
 ## PREMIERS PAS   
-   *program-sum-js*
+   *program-sum.js*
 
   Écrivez un programme qui accepte un ou plusieurs nombres comme arguments  
   de la ligne de commande, et affiche la somme de ces nombres sur la console  
@@ -37,7 +37,7 @@
   * objet Process avec propriété argv qui contien la ligne de commande
 
   ## MA PREMIÈRE E/S !
-    *first-I-O.js*
+  *first-IO.js*
 
   Écrivez un programme qui utilise une opération synchrone sur le système de  
   fichiers pour lire un fichier et afficher son nombre de fins de ligne sur  
@@ -135,6 +135,10 @@
     file:///usr/local/lib/node_modules/learnyounode/node_apidoc/fs.html  
 
     ### KL
-      * module 'fs'
-      * méthode ReadFileSync qui renvoie string ou buffer
-      * méthode toString()
+      * méthode ReadFile qui renvoie string ou buffer
+      `fs.readFile(file, 'utf8', callback)`
+      * callback `function (err, data) { /* ... / } `
+      * ne pas oublier dans la callback:
+      `if (err) {
+         return console.log(err)
+         }`
