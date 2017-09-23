@@ -107,7 +107,7 @@
 
    ─────────────────────────────────────────────────────────────────────────────  
 
-   # CONSEILS  
+   ## Conseils  
 
     La solution à ce problème est presque exactement la même que pour le  
     précédent, à ceci près que vous devez désormais le faire à la façon  
@@ -134,7 +134,7 @@
     La documentation du module fs
     file:///usr/local/lib/node_modules/learnyounode/node_apidoc/fs.html  
 
-    ### KL
+    ### Key Learnings
       * méthode ReadFile en asynchrone (mode Node) qui renvoie string ou buffer
       `fs.readFile(file, 'utf8', callback)`
       * convention Node de callback `function (err, data) { /* ... / } `
@@ -238,9 +238,8 @@
   par n’importe qui faisant learnyounode, ou le vérificateur, et marcher tel  
   quel.  
 
- ─────────────────────────────────────────────────────────────────────────────  
-
- ## CONSEILS  
+ ─────────────────────────────────────────────────────────────────────────────
+ ## Conseils  
 
   Créez un nouveau module en créant simplement un nouveau fichier qui  
   contiendrait votre fonction de lecture de répertoire et de filtrage. Pour  
@@ -288,7 +287,7 @@
        })  
      }  
 
-  ## KL
+  ## Key Learnings
 
     * méthode js forEach() pour executer une fonction donnée sur les éléments d'un tableau
     https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/forEach
@@ -299,10 +298,11 @@
         // a
         // b
         // c`
-
+    * modularisation: séparer l'algo métier (le "contrat" du module) de l'exploitation du résultat -> en créant 2 fichiers
+    Le module exporté se limite à faire l'algo mais sans traiter l'erreur ou traiter le résultat
     * définir un export de fonction unique :
         `module.exports = function MyModule(args dont callback) { /* ... / }`
-    * en fin du module: callback avec le résultat visé en 2ème argument
+    * en fin du module: appeler la callback avec le résultat visé en 2ème argument
         `return callback( null, data);`
         **convention Node.js (erreur, données)**
 
@@ -315,3 +315,38 @@
             return callback(err);
             };
             ...`
+
+  ## CLIENT HTTP
+
+   [image] (ex7Learnyounode.jpg)
+
+    Écrivez un programme qui fait une requête HTTP GET sur une URL fournie  
+    comme premier argument de la ligne de commande.  Affichez le contenu  
+    String de chaque événement 'data' de la réponse sur sa propre ligne dans  
+    la console (stdout).  
+
+   ────────────────────────────────────────────────────────────────────────────
+
+   # Conseils  
+
+    Pour cet exercice, vous aurez besoin du module noyau http.  
+    file:///usr/local/lib/node_modules/learnyounode/node_apidoc/http.html  
+
+    La méthode http.get() est un raccourci pour les requêtes GET simples, vous pouvez l’utiliser pour simplifier votre solution.
+    Le premier argument peut être l’URL que vous voulez récupérer ; passez une fonction de rappel en deuxième argument.  
+    Contrairement aux autres fonctions de rappel, celle-ci a comme signature :   function callback (response) { /* ... }  
+
+    …dans laquelle l’objet response est un objet flux (stream) Node. Vous  
+    pouvez traiter les flux Node comme des objets émettant des événements. Les Les 3 événements qui nous intéressent le plus sont : 'data', 'error' et  
+    'end'.  Vous pouvez écouter un événement comme ceci :  
+
+       response.on("data", function (data) { /* ... */ });  
+
+    L’événement 'data' est émis pour chaque bloc de données disponible et prêt  
+    à être traité.  La taille du bloc dépend de la source de données  
+    sous-jacente.  
+
+    L’objet response que vous obtenez suite à un http.get() dispose aussi  
+    d’une méthode setEncoding(). Si vous l’appelez avec l’argument 'utf8', les  
+    événements 'data' émettront des String au lieu des Buffer habituels, qu’il  
+    vous aurait fallu convertir explicitement en String.  
