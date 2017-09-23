@@ -1,5 +1,5 @@
 ## PREMIERS PAS   
-   *program-sum-js.js*
+   *program-sum-js*
 
   Écrivez un programme qui accepte un ou plusieurs nombres comme arguments  
   de la ligne de commande, et affiche la somme de ces nombres sur la console  
@@ -32,7 +32,7 @@
   du troisième élément (index 2), et ajouter chaque élément à un total  
   jusqu'à atteindre le bout du tableau.  
 
-# KL
+### KL
   * en Node, tout ce qui est renvoyé en console est String -> utiliser Number()
   * objet Process avec propriété argv qui contien la ligne de commande
 
@@ -88,7 +88,7 @@
   pas de '\n' à la fin, donc il contiendra un élément de plus que le nombre  
   de fins de ligne.  
 
-  # KL
+  ### KL
     * module 'fs'
     * méthode ReadFileSync qui renvoie string ou buffer
     * méthode toString()
@@ -134,7 +134,7 @@
     La documentation du module fs
     file:///usr/local/lib/node_modules/learnyounode/node_apidoc/fs.html  
 
-    # KL
+    ### KL
       * module 'fs'
       * méthode ReadFileSync qui renvoie string ou buffer
       * méthode toString()
