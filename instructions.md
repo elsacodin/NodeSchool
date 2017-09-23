@@ -1,11 +1,11 @@
 ## PREMIERS PAS   
-   *program-sum.js*
+   **program-sum.js**
 
   Écrivez un programme qui accepte un ou plusieurs nombres comme arguments  
   de la ligne de commande, et affiche la somme de ces nombres sur la console  
   (stdout ou console.log).  
  ────────────────────────────────────────────────────────────────────────────
- ## CONSEILS  
+ ### CONSEILS
 
   Vous pouvez accéder aux arguments de la ligne de commande via l’objet  
   global process.  L’objet process a une propriété argv qui est un tableau  
@@ -37,7 +37,7 @@
   * objet Process avec propriété argv qui contien la ligne de commande
 
   ## MA PREMIÈRE E/S !
-  *first-IO.js*
+  **first-IO.js**
 
   Écrivez un programme qui utilise une opération synchrone sur le système de  
   fichiers pour lire un fichier et afficher son nombre de fins de ligne sur  
@@ -50,7 +50,7 @@
   fichier de test.  
 
  ─────────────────────────────────────────────────────────────────────────────
- ## CONSEILS  
+ ### CONSEILS  
 
   Tout ce qui touche au système de fichiers se trouve dans le module noyau  
   fs (un module noyau est fourni de base par Node).  Pour charger ce type de  
@@ -96,7 +96,7 @@
 
 
   ## MA PREMIÈRE E/S ASYNCHRONE !
-  *first_IO_async.js*
+  **first_IO_async.js**
 
     Écrivez un programme qui utilise une opération asynchrone sur le système  
     de fichiers pour lire un fichier et afficher son nombre de fins de ligne  
@@ -135,10 +135,183 @@
     file:///usr/local/lib/node_modules/learnyounode/node_apidoc/fs.html  
 
     ### KL
-      * méthode ReadFile qui renvoie string ou buffer
+      * méthode ReadFile en asynchrone (mode Node) qui renvoie string ou buffer
       `fs.readFile(file, 'utf8', callback)`
-      * callback `function (err, data) { /* ... / } `
+      * convention Node de callback `function (err, data) { /* ... / } `
       * ne pas oublier dans la callback:
       `if (err) {
          return console.log(err)
          }`
+
+    ## LISTING FILTRÉ
+      **listing_files.js**
+
+           Créez un programme qui affiche une liste de fichiers au sein d’un  
+           répertoire donné, filtrés en fonction de leur extension.  Vous recevrez le chemin du répertoire comme premier argument de la ligne de commande (par  
+           ex. '/chemin/du/dossier/'), et comme deuxième argument une extension de fichier à utiliser pour le filtrage.  
+
+           Par exemple, si vous recevez 'txt' comme deuxième argument, vous devrez filtrer la liste pour ne garder que les fichiers dont le nom se termine par .txt.  Remarquez bien que le deuxième argument qui vous sera fourni ne commencera pas par un '.'.  
+
+           La liste des fichiers devrait être affichée sur la console, à raison d’un fichier par ligne.  Vous devez utiliser des E/S asynchrones.  
+
+          ─────────────────────────────────────────────────────────────────────
+
+          ## CONSEILS  
+
+           La méthode fs.readdir() prend un chemin comme premier argument et une fonction de rappel en deuxième.  La signature de la fonction de rappel est :  function callback (err, list) { /* ...  }  
+
+           …dans laquelle list est un tableau de chaînes de caractères représentant les noms de fichiers.  
+
+           La documentation du module noyau path, en particulier sa méthode extname:  
+          file:///usr/local/lib/node_modules/learnyounode/node_apidoc/path.html  
+
+          ─────────────────────────────────────────────────────────────────────## KL
+          * Méthode JS filter
+          The filter() method creates a new array with all elements that pass the test implemented by the provided function.
+          https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+              `var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+              var filtered = numbers.filter( function evenNumbers (number){
+                 return number % 2 ===0;
+                 });
+              console.log(filtered);`
+
+
+          * méthode asynchrone fs.readdir()
+          * module noyau 'path' et sa méthode extname pour extraire l'extension du fichier
+          * dans callback
+          ` if (err) {
+              return console.log(err)
+              }`
+
+  ## MODULARISE-MOI ÇA
+
+  **app-module.js**
+  **mymodule.js**
+
+  Ce problème est le même que le précédent, mais il introduit le concept de  
+  modules.  Vous devrez créer deux fichiers distincts pour résoudre cet  
+  exercice.
+  Créez un programme qui affiche une liste de fichiers au sein d’un  
+  répertoire donné (fourni en premier argument), filtrés en fonction de leur  
+  extension (fournie en deuxième argument).  La liste des fichiers doit être  
+  affichée sur la console, à raison d’un fichier par ligne.  Vous devez  
+  utiliser des E/S asynchrones.  
+
+  Vous devez écrire un fichier de module pour contenir l’essentiel du  
+  boulot. Ce module doit exporter une unique fonction qui prendra trois  
+  arguments :
+  - le chemin du répertoire
+  - l’extension de filtrage
+  -  et une fonction de rappel, dans cet ordre.  
+  L’argument d’extension de filtrage devra être exactement celui passé à votre programme.  N’en faites pas une RegExp, ne le préfixez pas avec '.' ou quoi que ce soit d’autre, passez-lejuste à votre module, dans lequel vous placerez les opérations nécessaires pour faire fonctionner le filtre.  
+
+  La fonction de rappel devra être appelée en utilisant la **convention  
+  Node.js (erreur, données)**.  Cette convention stipule qu’à moins qu’une    
+  erreur survienne, le premier argument passé devra être null, et le second  
+  sera vos données.  Dans cet exercice, les données seront la liste filtrée  
+  des fichiers, en tant que tableau.  Si vous recevez une erreur, par  
+  exemple suite à votre appel de fs.readdir(), la fonction de rappel de  
+  votre module devra être appelée avec cette erreur, et uniquement cette  
+  erreur, comme premier argument.  
+
+  Vous devez vous abstenir d’afficher directement sur la console depuis  
+  votre fichier de module, et réserver ce traitement à votre programme  
+  principal uniquement.  
+
+  Dans le cas d’une erreur qui remonterait à votre programme principal,  
+  vérifiez simplement sa présence et affichez un message d’information sur  
+  la console.  
+
+  Les 4 points suivants constituent le contrat que votre module doit  
+  respecter :  
+
+   1. Exporter une unique fonction qui prend exactement les arguments décrits.  
+   2. Appeler la fonction de rappel une et une seule fois avec soit une erreur,  
+      soit des données, de la façon décrite.  
+   3. Ne rien changer d’autre, telles que les variables globales ou la sortie  
+      standard.  
+   4. Traiter toute erreur qui pourrait survenir en les passant à la fonction  
+      de rappel.  
+
+  L’avantage d’avoir un contrat est que votre module peut être utilisé par  
+  quiconque s’attend à ce contrat.  Donc votre module pourrait être utilisé  
+  par n’importe qui faisant learnyounode, ou le vérificateur, et marcher tel  
+  quel.  
+
+ ─────────────────────────────────────────────────────────────────────────────  
+
+ ## CONSEILS  
+
+  Créez un nouveau module en créant simplement un nouveau fichier qui  
+  contiendrait votre fonction de lecture de répertoire et de filtrage. Pour  
+  définir un export de fonction unique, affectez cette fonction à l’objet  
+  module.exports, en écrasant sa valeur précédente :  
+
+     module.exports = function filterDir(args) { /* ... / }  
+
+  Vous pouvez aussi déclarer la fonction d’abord et affecter sa référence à  
+  l’objet ensuite.  
+
+  Pour utiliser ce nouveau module dans votre programme principal, utilisez  
+  un appel à require() comme vous le faites déjà avec require('fs') pour  
+  obtenir le module fs.  La seule différence, c’est que les modules locaux  
+  doivent utiliser des chemins relatifs, ici préfixés par './'.  Donc si  
+  votre module s’appelle mymodule.js, vous devriez faire :  
+
+     var myModule = require('./mymodule');  
+
+  Même s’il est possible de préciser aussi l’extension du fichier ('.js'),  
+  celle-ci est optionelle et traditionnellement omise, afin de faciliter le  
+  recours éventuel à des chargeurs alternatifs de modules.  
+
+  Vous avez désormais l’objet fourni par le module.exports de votre module  
+  qui est mis à disposition dans votre variable locale myModule.  Comme vous  
+  avez exporté une simple fonction, myModule est une fonction que vous  
+  pouvez appeler !  
+
+  Gardez aussi à l’esprit qu’il est idiomatique en Node de vérifier si on  
+  s’est pris une erreur et de court-circuiter vers la fonction de rappel  
+  supérieure dans ce cas :  
+
+     function bar (callback) {  
+       foo(function (err, data) {  
+         if (err) {  
+           return callback(err); // propagation et court-circuit  
+         }  
+
+         // … pas d’erreur, on continue à faire des trucs cool avec `data`  
+
+         // tout s’est bien passé, on appelle `callback` avec `null` pour  
+         // l’argument d’erreur  
+
+         callback(null, data)  
+       })  
+     }  
+
+  ## KL
+
+    * méthode js forEach() pour executer une fonction donnée sur les éléments d'un tableau
+    https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/forEach
+        `var a = ['a', 'b', 'c'];
+          a.forEach(function(element) {
+          console.log(element);
+        });
+        // a
+        // b
+        // c`
+
+    * définir un export de fonction unique :
+        `module.exports = function MyModule(args dont callback) { /* ... / }`
+    * en fin du module: callback avec le résultat visé en 2ème argument
+        `return callback( null, data);`
+        **convention Node.js (erreur, données)**
+
+    Dans le fichier principal:
+    * appel du module par le chemin relatif:
+        `var myModule = require('./mymodule'); `
+    * et appel de la fonction avec les args adéquats et callback
+        `myModule(arg1, arg2, function (err, data) {
+          if (err) {
+            return callback(err);
+            };
+            ...`
